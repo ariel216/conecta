@@ -1,49 +1,93 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ProductForm } from "@/components/product-form"
-import { productosFake, empresasFake, unidadesMedida, type Producto } from "@/lib/data"
-import { Package, Search, Filter, Eye, Edit, Trash2, Download, Building2, Clock, Hash, Plus } from "lucide-react"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ProductForm } from "@/components/product-form";
+import {
+  productosFake,
+  empresasFake,
+  unidadesMedida,
+  type Producto,
+} from "@/lib/data";
+import {
+  Package,
+  Search,
+  Filter,
+  Eye,
+  Edit,
+  Trash2,
+  Download,
+  Building2,
+  Clock,
+  Hash,
+  Plus,
+} from "lucide-react";
 
 interface ProductsManagementProps {
-  onProductAdded?: (producto: Producto) => void
+  onProductAdded?: (producto: Producto) => void;
 }
 
-export function ProductsManagement({ onProductAdded }: ProductsManagementProps) {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [filterEmpresa, setFilterEmpresa] = useState("all")
-  const [filterUnidad, setFilterUnidad] = useState("all")
-  const [showCreateForm, setShowCreateForm] = useState(false)
+export function ProductsManagement({
+  onProductAdded,
+}: ProductsManagementProps) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterEmpresa, setFilterEmpresa] = useState("all");
+  const [filterUnidad, setFilterUnidad] = useState("all");
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   const filteredProducts = productosFake.filter((producto) => {
-    const matchesSearch = producto.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesEmpresa = filterEmpresa === "all" || producto.id_empresa.toString() === filterEmpresa
-    const matchesUnidad = filterUnidad === "all" || producto.unidad_medida === filterUnidad
+    const matchesSearch = producto.nombre
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesEmpresa =
+      filterEmpresa === "all" ||
+      producto.id_empresa.toString() === filterEmpresa;
+    const matchesUnidad =
+      filterUnidad === "all" || producto.unidad_medida === filterUnidad;
 
-    return matchesSearch && matchesEmpresa && matchesUnidad
-  })
+    return matchesSearch && matchesEmpresa && matchesUnidad;
+  });
 
   const handleProductAdded = (producto: Producto) => {
-    onProductAdded?.(producto)
-    setShowCreateForm(false)
-  }
+    onProductAdded?.(producto);
+    setShowCreateForm(false);
+  };
 
   const getEmpresaInfo = (id_empresa: number) => {
-    return empresasFake.find((empresa) => empresa.id === id_empresa)
-  }
+    return empresasFake.find((empresa) => empresa.id === id_empresa);
+  };
 
   const exportToCSV = () => {
-    const headers = ["ID", "Nombre", "Empresa", "Cantidad", "Unidad", "Tiempo Entrega (días)"]
+    const headers = [
+      "ID",
+      "Nombre",
+      "Empresa",
+      "Cantidad",
+      "Unidad",
+      "Tiempo Entrega (días)",
+    ];
     const csvContent = [
       headers.join(","),
       ...filteredProducts.map((producto) => {
-        const empresa = getEmpresaInfo(producto.id_empresa)
+        const empresa = getEmpresaInfo(producto.id_empresa);
         return [
           producto.id,
           `"${producto.nombre}"`,
@@ -51,25 +95,27 @@ export function ProductsManagement({ onProductAdded }: ProductsManagementProps) 
           producto.cantidad,
           `"${producto.unidad_medida}"`,
           producto.tiempo_entrega,
-        ].join(",")
+        ].join(",");
       }),
-    ].join("\n")
+    ].join("\n");
 
-    const blob = new Blob([csvContent], { type: "text/csv" })
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = "productos.csv"
-    a.click()
-    window.URL.revokeObjectURL(url)
-  }
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "productos.csv";
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Gestión de Productos</h2>
-          <p className="text-muted-foreground">Administra los productos de las empresas registradas</p>
+          <p className="text-muted-foreground">
+            Administra los productos de las empresas registradas
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Button onClick={exportToCSV} variant="outline">
@@ -90,6 +136,13 @@ export function ProductsManagement({ onProductAdded }: ProductsManagementProps) 
           </CardHeader>
           <CardContent>
             <ProductForm onProductAdded={handleProductAdded} />
+            <Button
+              variant="outline"
+              onClick={() => setShowCreateForm(false)}
+              className="mt-4"
+            >
+              Cancelar
+            </Button>
           </CardContent>
         </Card>
       )}
@@ -171,8 +224,12 @@ export function ProductsManagement({ onProductAdded }: ProductsManagementProps) 
             <div className="flex items-center gap-2">
               <Building2 className="h-5 w-5 text-green-600" />
               <div>
-                <p className="text-sm text-muted-foreground">Empresas con Productos</p>
-                <p className="text-2xl font-bold">{new Set(filteredProducts.map((p) => p.id_empresa)).size}</p>
+                <p className="text-sm text-muted-foreground">
+                  Empresas con Productos
+                </p>
+                <p className="text-2xl font-bold">
+                  {new Set(filteredProducts.map((p) => p.id_empresa)).size}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -185,7 +242,9 @@ export function ProductsManagement({ onProductAdded }: ProductsManagementProps) 
               <div>
                 <p className="text-sm text-muted-foreground">Cantidad Total</p>
                 <p className="text-2xl font-bold">
-                  {filteredProducts.reduce((sum, p) => sum + p.cantidad, 0).toLocaleString()}
+                  {filteredProducts
+                    .reduce((sum, p) => sum + p.cantidad, 0)
+                    .toLocaleString()}
                 </p>
               </div>
             </div>
@@ -200,7 +259,10 @@ export function ProductsManagement({ onProductAdded }: ProductsManagementProps) 
                 <p className="text-sm text-muted-foreground">Tiempo Promedio</p>
                 <p className="text-2xl font-bold">
                   {Math.round(
-                    filteredProducts.reduce((sum, p) => sum + p.tiempo_entrega, 0) / filteredProducts.length || 0,
+                    filteredProducts.reduce(
+                      (sum, p) => sum + p.tiempo_entrega,
+                      0
+                    ) / filteredProducts.length || 0
                   )}{" "}
                   días
                 </p>
@@ -230,7 +292,7 @@ export function ProductsManagement({ onProductAdded }: ProductsManagementProps) 
               </TableHeader>
               <TableBody>
                 {filteredProducts.map((producto) => {
-                  const empresa = getEmpresaInfo(producto.id_empresa)
+                  const empresa = getEmpresaInfo(producto.id_empresa);
                   return (
                     <TableRow key={producto.id}>
                       <TableCell className="font-mono">{producto.id}</TableCell>
@@ -249,7 +311,9 @@ export function ProductsManagement({ onProductAdded }: ProductsManagementProps) 
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="secondary">{producto.cantidad.toLocaleString()}</Badge>
+                        <Badge variant="secondary">
+                          {producto.cantidad.toLocaleString()}
+                        </Badge>
                       </TableCell>
                       <TableCell>{producto.unidad_medida}</TableCell>
                       <TableCell>
@@ -266,13 +330,17 @@ export function ProductsManagement({ onProductAdded }: ProductsManagementProps) 
                           <Button size="sm" variant="ghost">
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button size="sm" variant="ghost" className="text-red-600">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-red-600"
+                          >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </TableCell>
                     </TableRow>
-                  )
+                  );
                 })}
               </TableBody>
             </Table>
@@ -280,5 +348,5 @@ export function ProductsManagement({ onProductAdded }: ProductsManagementProps) 
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

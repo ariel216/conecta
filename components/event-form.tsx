@@ -220,7 +220,7 @@ export function EventForm({ onEventCreated }: EventFormProps) {
                 }
                 required
               >
-                <SelectTrigger className="mt-1">
+                <SelectTrigger className="mt-1 w-full">
                   <SelectValue placeholder="Seleccione departamento" />
                 </SelectTrigger>
                 <SelectContent>
@@ -312,32 +312,6 @@ export function EventForm({ onEventCreated }: EventFormProps) {
           {/* Configuración adicional */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <Label
-                htmlFor="moneda"
-                className="text-sm font-medium flex items-center gap-2"
-              >
-                <DollarSign className="h-4 w-4" />
-                Moneda *
-              </Label>
-              <Select
-                value={formData.moneda}
-                onValueChange={(value) => handleInputChange("moneda", value)}
-                required
-              >
-                <SelectTrigger className="mt-1">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {monedas.map((moneda) => (
-                    <SelectItem key={moneda.codigo} value={moneda.codigo}>
-                      {moneda.codigo} - {moneda.nombre}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
               <Label htmlFor="id_contacto" className="text-sm font-medium">
                 Contacto Asignado *
               </Label>
@@ -348,7 +322,7 @@ export function EventForm({ onEventCreated }: EventFormProps) {
                 }
                 required
               >
-                <SelectTrigger className="mt-1">
+                <SelectTrigger className="mt-1 w-full">
                   <SelectValue placeholder="Seleccione contacto" />
                 </SelectTrigger>
                 <SelectContent>
@@ -364,7 +338,7 @@ export function EventForm({ onEventCreated }: EventFormProps) {
               </Select>
             </div>
 
-            <div className="md:col-span-2">
+            <div>
               <Label htmlFor="url_logo" className="text-sm font-medium">
                 URL del Logo
               </Label>

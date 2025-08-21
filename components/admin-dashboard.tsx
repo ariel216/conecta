@@ -155,7 +155,7 @@ export function AdminDashboard({ eventos, empresas }: AdminDashboardProps) {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">
+            <div className="text-2xl font-bold text-green-600 dark:text-green-300">
               {eventosProximos}
             </div>
             <p className="text-xs text-muted-foreground">Por realizarse</p>
@@ -170,7 +170,7 @@ export function AdminDashboard({ eventos, empresas }: AdminDashboardProps) {
             <UserCheck className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-indigo-600">
+            <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
               {totalAsistencias}
             </div>
             <p className="text-xs text-muted-foreground">
@@ -470,7 +470,7 @@ export function AdminDashboard({ eventos, empresas }: AdminDashboardProps) {
                   <div className="text-right">
                     <div className="font-medium">
                       {new Date(evento.fecha_evento).toLocaleDateString(
-                        "es-CO"
+                        "es-BO"
                       )}
                     </div>
                     <div className="text-sm text-muted-foreground">

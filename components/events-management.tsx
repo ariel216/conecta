@@ -336,7 +336,7 @@ export function EventsManagement({
               value={filterStatus}
               onValueChange={(value: FilterStatus) => setFilterStatus(value)}
             >
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[200px]">
                 <Filter className="h-4 w-4 mr-2" />
                 <SelectValue />
               </SelectTrigger>
@@ -352,7 +352,7 @@ export function EventsManagement({
               value={filterDepartment}
               onValueChange={setFilterDepartment}
             >
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[200px]">
                 <MapPin className="h-4 w-4 mr-2" />
                 <SelectValue />
               </SelectTrigger>

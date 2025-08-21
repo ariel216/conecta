@@ -104,7 +104,7 @@ export function ProductForm({ onProductAdded }: ProductFormProps) {
                   setFormData({ ...formData, id_empresa: value })
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleccionar empresa" />
                 </SelectTrigger>
                 <SelectContent>
@@ -154,7 +154,7 @@ export function ProductForm({ onProductAdded }: ProductFormProps) {
                   setFormData({ ...formData, unidad_medida: value })
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleccionar unidad" />
                 </SelectTrigger>
                 <SelectContent>

@@ -28,6 +28,7 @@ import {
   Handshake,
   DollarSign,
 } from "lucide-react";
+import Link from "next/link";
 
 export default function HomePage() {
   const [eventos, setEventos] = useState<Evento[]>(eventosFake);
@@ -76,7 +77,7 @@ export default function HomePage() {
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
-        className="space-y-6"
+        className="space-y-2"
       >
         <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger

@@ -148,7 +148,7 @@ export function CompanyForm({ onCompanyCreated }: CompanyFormProps) {
                 onValueChange={(value) => handleInputChange("rubro", value)}
                 required
               >
-                <SelectTrigger className="mt-1">
+                <SelectTrigger className="mt-1 w-full">
                   <SelectValue placeholder="Seleccione rubro" />
                 </SelectTrigger>
                 <SelectContent>
@@ -174,7 +174,7 @@ export function CompanyForm({ onCompanyCreated }: CompanyFormProps) {
                 onValueChange={(value) => handleInputChange("tipo", value)}
                 required
               >
-                <SelectTrigger className="mt-1">
+                <SelectTrigger className="mt-1 w-full">
                   <SelectValue placeholder="Seleccione tipo" />
                 </SelectTrigger>
                 <SelectContent>
@@ -265,7 +265,7 @@ export function CompanyForm({ onCompanyCreated }: CompanyFormProps) {
                 }
                 required
               >
-                <SelectTrigger className="mt-1">
+                <SelectTrigger className="mt-1 w-full">
                   <SelectValue placeholder="Seleccione departamento" />
                 </SelectTrigger>
                 <SelectContent>
