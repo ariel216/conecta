@@ -4,6 +4,7 @@ import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
+import { AdminLayout } from "@/components/admin-layout";
 
 export const metadata: Metadata = {
   title: "Conecta",
@@ -33,7 +34,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <AdminLayout>{children}</AdminLayout>
           <Toaster richColors position="top-right" />
         </ThemeProvider>
       </body>

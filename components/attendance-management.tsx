@@ -39,11 +39,9 @@ import {
   Download,
   X,
   Check,
-  Calendar,
-  Building2,
-  Plus,
-  ArrowLeft,
   MapPin,
+  Plus,
+  Building2,
 } from "lucide-react";
 import {
   asistenciasFake,
@@ -52,24 +50,19 @@ import {
   actualizarEstadoAsistencia,
   puedeCancelarAsistencia,
   agregarAsistencia,
-  esEventoDisponibleParaAsistencia,
   type Asistencia,
 } from "@/lib/data";
 import { toast } from "sonner";
 
-export function AttendanceManagement() {
-  const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
+export function AttendanceManagement({ eventId }: { eventId: number }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterEstado, setFilterEstado] = useState<string>("todos");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const getEventoNombre = (id: number) => {
-    return (
-      eventosFake.find((e) => e.id === id)?.descripcion_evento ||
-      "Evento no encontrado"
-    );
-  };
+  const selectedEvent = eventosFake.find((e) => e.id === eventId);
+  if (!selectedEvent)
+    return <p className="text-red-500">Evento no encontrado</p>;
 
   const getEmpresaNombre = (id: number) => {
     return (
@@ -77,32 +70,18 @@ export function AttendanceManagement() {
     );
   };
 
-  const getEvento = (id: number) => {
-    return eventosFake.find((e) => e.id === id);
-  };
-
-  const eventosDisponibles = eventosFake.filter((evento) =>
-    esEventoDisponibleParaAsistencia(evento)
-  );
-
-  const filteredAsistencias = selectedEventId
-    ? asistenciasFake.filter((asistencia) => {
-        if (asistencia.id_evento !== selectedEventId) return false;
-
-        const empresa = getEmpresaNombre(asistencia.id_empresa).toLowerCase();
-        const matchesSearch = empresa.includes(searchTerm.toLowerCase());
-        const matchesEstado =
-          filterEstado === "todos" || asistencia.estado === filterEstado;
-
-        return matchesSearch && matchesEstado;
-      })
-    : [];
+  const filteredAsistencias = asistenciasFake.filter((asistencia) => {
+    if (asistencia.id_evento !== eventId) return false;
+    const empresa = getEmpresaNombre(asistencia.id_empresa).toLowerCase();
+    const matchesSearch = empresa.includes(searchTerm.toLowerCase());
+    const matchesEstado =
+      filterEstado === "todos" || asistencia.estado === filterEstado;
+    return matchesSearch && matchesEstado;
+  });
 
   const getEmpresasDisponibles = () => {
-    if (!selectedEventId) return [];
-
     const empresasConAsistencia = asistenciasFake
-      .filter((a) => a.id_evento === selectedEventId)
+      .filter((a) => a.id_evento === eventId)
       .map((a) => a.id_empresa);
 
     return empresasFake.filter(
@@ -111,8 +90,7 @@ export function AttendanceManagement() {
   };
 
   const handleCancelarAsistencia = (asistencia: Asistencia) => {
-    const evento = getEvento(asistencia.id_evento);
-    if (evento && puedeCancelarAsistencia(evento)) {
+    if (puedeCancelarAsistencia(selectedEvent)) {
       actualizarEstadoAsistencia(asistencia.id, "cancelada");
       setRefreshKey((prev) => prev + 1);
       toast.success("Registro exitoso");
@@ -130,10 +108,9 @@ export function AttendanceManagement() {
   };
 
   const exportToCSV = () => {
-    const headers = ["ID", "Evento", "Empresa", "Estado", "Fecha Registro"];
+    const headers = ["ID", "Empresa", "Estado", "Fecha Registro"];
     const data = filteredAsistencias.map((asistencia) => [
       asistencia.id,
-      getEventoNombre(asistencia.id_evento),
       getEmpresaNombre(asistencia.id_empresa),
       asistencia.estado,
       new Date(asistencia.fecha_registro).toLocaleDateString("es-CO"),
@@ -147,7 +124,7 @@ export function AttendanceManagement() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `asistencias_evento_${selectedEventId}.csv`;
+    a.download = `asistencias_evento_${eventId}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -169,45 +146,36 @@ export function AttendanceManagement() {
     }
   };
 
-  //////////////////
+  // --- lógica de registrar empresas ---
   const [selectedEmpresas, setSelectedEmpresas] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [empresaSearch, setEmpresaSearch] = useState("");
   const pageSize = 10;
 
   const empresasDisponibles = getEmpresasDisponibles();
-
-  // Filtrado por buscador
   const filteredEmpresas = empresasDisponibles.filter((empresa) =>
     empresa.nombre.toLowerCase().includes(empresaSearch.toLowerCase())
   );
-
-  // Calcular paginación
   const totalPages = Math.ceil(filteredEmpresas.length / pageSize);
   const paginatedEmpresas = filteredEmpresas.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
 
-  // Toggle checkbox individual
   const toggleEmpresaSeleccionada = (id: number) => {
     setSelectedEmpresas((prev) =>
       prev.includes(id) ? prev.filter((e) => e !== id) : [...prev, id]
     );
   };
 
-  // Toggle checkbox de página completa
   const toggleAllPage = () => {
     const idsPagina = paginatedEmpresas.map((e) => e.id);
     const allSelected = idsPagina.every((id) => selectedEmpresas.includes(id));
-
     if (allSelected) {
-      // deseleccionar todos
       setSelectedEmpresas((prev) =>
         prev.filter((id) => !idsPagina.includes(id))
       );
     } else {
-      // agregar todos los de la página
       setSelectedEmpresas((prev) => [
         ...prev,
         ...idsPagina.filter((id) => !prev.includes(id)),
@@ -215,130 +183,44 @@ export function AttendanceManagement() {
     }
   };
 
-  // Registrar múltiples asistencias
   const handleAgregarAsistencias = () => {
-    if (!selectedEventId || selectedEmpresas.length === 0) return;
-
+    if (selectedEmpresas.length === 0) return;
     selectedEmpresas.forEach((idEmpresa) => {
-      agregarAsistencia(selectedEventId, idEmpresa);
+      agregarAsistencia(eventId, idEmpresa);
     });
-
     setRefreshKey((prev) => prev + 1);
     setIsModalOpen(false);
     setSelectedEmpresas([]);
     setEmpresaSearch("");
     toast.success("Registro exitoso");
   };
-  /////////////////
-
-  if (!selectedEventId) {
-    return (
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-2xl font-bold ">Gestión de Asistencias</h2>
-          <p className="dark:text-gray-400 mt-1">
-            Selecciona un evento para gestionar sus asistencias
-          </p>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Eventos Disponibles</CardTitle>
-            <CardDescription>
-              Selecciona un evento para ver y gestionar sus asistencias
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {eventosDisponibles.map((evento) => {
-                const asistenciasCount = asistenciasFake.filter(
-                  (a) => a.id_evento === evento.id
-                ).length;
-                const confirmadas = asistenciasFake.filter(
-                  (a) => a.id_evento === evento.id && a.estado === "confirmada"
-                ).length;
-
-                return (
-                  <Card
-                    key={evento.id}
-                    className="cursor-pointer hover:shadow-md transition-shadow"
-                    onClick={() => setSelectedEventId(evento.id)}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-start gap-3">
-                        <Calendar className="h-5 w-5 text-blue-600 dark:text-blue-300 mt-1" />
-                        <div className="flex-1">
-                          <h3 className="font-semibold mb-1">
-                            {evento.descripcion_evento}
-                          </h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                            {evento.lugar}
-                          </p>
-                          <div className="flex flex-col items-start gap-2 text-xs">
-                            <span className="text-gray-600 dark:text-gray-300">
-                              {new Date(evento.fecha_evento).toLocaleDateString(
-                                "es-BO"
-                              )}
-                            </span>
-                            <div className="flex gap-2">
-                              <span className="px-2 py-0.5 rounded-full font-medium bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-200">
-                                {asistenciasCount} asistencias
-                              </span>
-                              <span className="px-2 py-0.5 rounded-full font-medium bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200">
-                                {confirmadas} confirmadas
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  const selectedEvent = getEvento(selectedEventId);
-  //const empresasDisponibles = getEmpresasDisponibles();
 
   return (
     <div className="space-y-6" key={refreshKey}>
+      {/* encabezado */}
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            onClick={() => setSelectedEventId(null)}
-            className="flex items-center gap-2 cursor-pointer"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Volver a Eventos
-          </Button>
           <div>
             <h2 className="text-2xl font-bold">
-              Asistencias - {selectedEvent?.descripcion_evento}
+              Asistencias - {selectedEvent.descripcion_evento}
             </h2>
             <div className="flex flex-row gap-2">
               <MapPin className="h-5 w-5 text-blue-600 dark:text-blue-300 mt-1" />
               <p className="text-gray-600 dark:text-gray-400 mt-1">
-                {selectedEvent?.lugar} •{" "}
-                {selectedEvent &&
-                  new Date(selectedEvent.fecha_evento).toLocaleDateString(
-                    "es-CO"
-                  )}
+                {selectedEvent.lugar} •{" "}
+                {new Date(selectedEvent.fecha_evento).toLocaleDateString(
+                  "es-CO"
+                )}
               </p>
             </div>
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {/* modal agregar asistencia */}
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
               <Button className="flex items-center gap-2 cursor-pointer">
-                <Plus className="h-4 w-4" />
-                Agregar Asistencia
+                <Plus className="h-4 w-4" /> Agregar Asistencia
               </Button>
             </DialogTrigger>
 
@@ -352,7 +234,7 @@ export function AttendanceManagement() {
               </DialogHeader>
 
               <div className="space-y-4">
-                {/* Buscador */}
+                {/* buscador */}
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <Input
@@ -360,13 +242,13 @@ export function AttendanceManagement() {
                     value={empresaSearch}
                     onChange={(e) => {
                       setEmpresaSearch(e.target.value);
-                      setCurrentPage(1); // reset página al buscar
+                      setCurrentPage(1);
                     }}
                     className="pl-10"
                   />
                 </div>
 
-                {/* Tabla de empresas */}
+                {/* tabla empresas */}
                 <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
@@ -421,7 +303,7 @@ export function AttendanceManagement() {
                   </Table>
                 </div>
 
-                {/* Paginador */}
+                {/* paginador */}
                 <div className="flex justify-between items-center mt-4">
                   <Button
                     variant="outline"
@@ -444,7 +326,7 @@ export function AttendanceManagement() {
                   </Button>
                 </div>
 
-                {/* Acciones */}
+                {/* acciones */}
                 <div className="flex justify-end gap-2 mt-4">
                   <Button
                     variant="outline"
@@ -468,12 +350,12 @@ export function AttendanceManagement() {
             variant="outline"
             className="flex items-center gap-2 bg-transparent cursor-pointer"
           >
-            <Download className="h-4 w-4" />
-            Exportar CSV
+            <Download className="h-4 w-4" /> Exportar CSV
           </Button>
         </div>
       </div>
 
+      {/* filtros */}
       <Card>
         <CardHeader>
           <CardTitle>Filtros y Búsqueda</CardTitle>
@@ -509,6 +391,7 @@ export function AttendanceManagement() {
         </CardContent>
       </Card>
 
+      {/* tabla asistencias */}
       <Card>
         <CardHeader>
           <CardTitle>
@@ -529,11 +412,7 @@ export function AttendanceManagement() {
               </TableHeader>
               <TableBody>
                 {filteredAsistencias.map((asistencia) => {
-                  const evento = getEvento(asistencia.id_evento);
-                  const puedeCancelar = evento
-                    ? puedeCancelarAsistencia(evento)
-                    : false;
-
+                  const puedeCancelar = puedeCancelarAsistencia(selectedEvent);
                   return (
                     <TableRow key={asistencia.id}>
                       <TableCell className="font-medium">
@@ -552,42 +431,66 @@ export function AttendanceManagement() {
                         )}
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2">
+                        <div className="flex gap-2">
                           {asistencia.estado === "pendiente" && (
-                            <Button
-                              size="sm"
-                              onClick={() =>
-                                handleConfirmarAsistencia(asistencia)
-                              }
-                              className="h-8 w-8 p-0"
-                            >
-                              <Check className="h-4 w-4" />
-                            </Button>
-                          )}
-                          {asistencia.estado !== "cancelada" &&
-                            puedeCancelar && (
+                            <>
+                              <Button
+                                size="sm"
+                                onClick={() =>
+                                  handleConfirmarAsistencia(asistencia)
+                                }
+                                className="flex items-center gap-1"
+                              >
+                                <Check className="h-4 w-4" /> Confirmar
+                              </Button>
                               <Button
                                 size="sm"
                                 variant="destructive"
                                 onClick={() =>
                                   handleCancelarAsistencia(asistencia)
                                 }
-                                className="h-8 w-8 p-0"
+                                disabled={!puedeCancelar}
+                                className="flex items-center gap-1"
                               >
-                                <X className="h-4 w-4" />
+                                <X className="h-4 w-4" /> Cancelar
                               </Button>
-                            )}
-                          {!puedeCancelar &&
-                            asistencia.estado !== "cancelada" && (
-                              <span className="text-xs text-gray-500">
-                                No cancelable
-                              </span>
-                            )}
+                            </>
+                          )}
+                          {asistencia.estado === "confirmada" && (
+                            <>
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() =>
+                                  handleCancelarAsistencia(asistencia)
+                                }
+                                disabled={!puedeCancelar}
+                                className="flex items-center gap-1"
+                              >
+                                <X className="h-4 w-4" /> Cancelar
+                              </Button>
+                            </>
+                          )}
+                          {asistencia.estado === "cancelada" && (
+                            <span className="text-gray-400 text-sm">
+                              Cancelada
+                            </span>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>
                   );
                 })}
+                {filteredAsistencias.length === 0 && (
+                  <TableRow>
+                    <TableCell
+                      colSpan={5}
+                      className="text-center text-gray-500 py-4"
+                    >
+                      No se encontraron asistencias
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </div>
