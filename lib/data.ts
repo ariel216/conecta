@@ -9,7 +9,6 @@ export interface Evento {
   fecha_evento: string;
   hora_inicio: string;
   hora_fin: string;
-  moneda: string;
   url_logo: string;
   id_contacto: number;
   capacidad_maxima: number;
@@ -36,6 +35,7 @@ export interface Empresa {
   direccion: string;
   sitio_web: string;
   facebook_url: string;
+  url_logo: string;
 }
 
 // Datos fake de contactos
@@ -71,12 +71,11 @@ export const eventosFake: Evento[] = [
     entidad_organizadora: "Cámara de Comercio",
     lugar: "Centro de Convenciones Ágora",
     departamento: "La Paz",
-    direccion: "Calle 24 #38-47, Bogotá",
+    direccion: "Calle 21 #410",
     sitio_web: "https://ccb.org.co",
     fecha_evento: "2024-03-15",
     hora_inicio: "08:00",
     hora_fin: "17:00",
-    moneda: "BS",
     url_logo: "/camara-comercio-bogota-logo.png",
     id_contacto: 1,
     capacidad_maxima: 50,
@@ -86,20 +85,19 @@ export const eventosFake: Evento[] = [
   },
   {
     id: 2,
-    descripcion_evento: "Encuentro Empresarial",
+    descripcion_evento: "Encuentro Empresarial 2025",
     entidad_organizadora: "Hotel Radisson",
     lugar: "Hotel Intercontinental",
     departamento: "Cochabamba",
-    direccion: "Avenida Colombia #2-72, Cali",
+    direccion: "Avenida Heroinas #784",
     sitio_web: "https://propacifico.org",
     fecha_evento: "2025-09-25",
     hora_inicio: "09:00",
     hora_fin: "18:00",
-    moneda: "BS",
     url_logo: "/propacifico-logo.png",
     id_contacto: 2,
-    capacidad_maxima: 50,
-    duracion_maxima: 20,
+    capacidad_maxima: 30,
+    duracion_maxima: 30,
     hora_descanso_inicio: "12:00",
     hora_descanso_fin: "13:00",
   },
@@ -117,6 +115,8 @@ export const empresasFake: Empresa[] = [
     direccion: "Carrera 15 #93-47, Bogotá",
     sitio_web: "https://techsolutions.co",
     facebook_url: "https://facebook.com/techsolutions",
+    url_logo:
+      "https://img.freepik.com/vector-gratis/diseno-logotipo-degradado-colorido-letra_474888-2309.jpg",
   },
   {
     id: 2,
@@ -128,6 +128,8 @@ export const empresasFake: Empresa[] = [
     direccion: "Avenida 6N #23-45, Cali",
     sitio_web: "https://distvalle.com",
     facebook_url: "https://facebook.com/distvalle",
+    url_logo:
+      "https://w7.pngwing.com/pngs/406/360/png-transparent-artstation-logo-logos-logos-and-brands-icon.png",
   },
   {
     id: 3,
@@ -139,6 +141,8 @@ export const empresasFake: Empresa[] = [
     direccion: "Calle 50 #45-67, Medellín",
     sitio_web: "https://manufnorte.com",
     facebook_url: "",
+    url_logo:
+      "https://upload.wikimedia.org/wikipedia/commons/5/53/Wikimedia-logo.png",
   },
 ];
 

@@ -14,7 +14,7 @@ import {
   Users,
   Settings,
 } from "lucide-react";
-import { ThemeToggle } from "./theme-toogle";
+import { ThemeToggle } from "../theme/theme-toogle";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 
@@ -35,8 +35,8 @@ const menuItems = [
     icon: <Building className="h-4 w-4" />,
   },
   {
-    name: "Asistencias",
-    href: "/attendance",
+    name: "Reuniones",
+    href: "/meetings",
     icon: <Users className="h-4 w-4" />,
   },
   {
@@ -71,7 +71,12 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             {/* Menú desktop */}
             <nav className="hidden md:flex gap-6 text-sm font-medium">
               {menuItems.map((item) => {
-                const active = pathname === item.href;
+                const active =
+                  item.href === "/"
+                    ? pathname === "/"
+                    : pathname === item.href ||
+                      pathname.startsWith(item.href + "/");
+
                 return (
                   <Link
                     key={item.href}

@@ -1,6 +1,6 @@
 "use client";
 
-import { EventsManagement } from "@/components/events-management";
+import { EventsManagement } from "@/components/events/events-management";
 import { Evento, eventosFake } from "@/lib/data";
 import { NextPage } from "next";
 import { useState } from "react";

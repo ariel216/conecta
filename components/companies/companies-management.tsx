@@ -32,7 +32,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CompanyForm } from "@/components/company-form";
+import { CompanyForm } from "@/components/companies/company-form";
 import { departamentos, rubros, type Empresa } from "@/lib/data";
 import {
   Search,

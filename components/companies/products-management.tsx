@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ProductForm } from "@/components/product-form";
+import { ProductForm } from "@/components/companies/product-form";
 import {
   productosFake,
   empresasFake,

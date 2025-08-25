@@ -28,10 +28,10 @@ export default function AttendancePage() {
           <div>
             <CardTitle className="flex items-center gap-2">
               <UserCheck className="h-5 w-5" />
-              Asistencia a Eventos Disponibles
+              Reuniones en Eventos Disponibles
             </CardTitle>
             <CardDescription>
-              Selecciona un evento para ver y gestionar sus asistencias
+              Selecciona un evento para ver y gestionar sus reuniones
             </CardDescription>
           </div>
         </CardHeader>
@@ -46,10 +46,7 @@ export default function AttendancePage() {
               ).length;
 
               return (
-                <Link
-                  key={evento.id}
-                  href={`/attendance/${encodeId(evento.id)}`}
-                >
+                <Link key={evento.id} href={`/meetings/${encodeId(evento.id)}`}>
                   <Card className="cursor-pointer hover:shadow-md transition-shadow">
                     <CardContent className="p-4">
                       <div className="flex items-start gap-3">

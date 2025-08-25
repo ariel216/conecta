@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { AdminLayout } from "@/components/admin-layout";
-import { AdminDashboard } from "@/components/admin-dashboard";
-import { EventsManagement } from "@/components/events-management";
-import { CompaniesManagement } from "@/components/companies-management";
-import { ProductsManagement } from "@/components/products-management";
-import { AttendanceManagement } from "@/components/attendance-management";
-import { MeetingsManagement } from "@/components/meetings-management";
-import { NegotiatedManagement } from "@/components/negotiated-management";
+import { AdminLayout } from "@/components/layout/admin-layout";
+import { AdminDashboard } from "@/components/dashboard/admin-dashboard";
+import { EventsManagement } from "@/components/events/events-management";
+import { CompaniesManagement } from "@/components/companies/companies-management";
+import { ProductsManagement } from "@/components/companies/products-management";
+import { AttendanceManagement } from "@/components/meetings/attendance-management";
+import { MeetingsManagement } from "@/components/meetings/meetings-management";
+import { NegotiatedManagement } from "@/components/meetings/negotiated-management";
 import {
   eventosFake,
   empresasFake,

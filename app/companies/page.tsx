@@ -1,6 +1,6 @@
 "use client";
 
-import { CompaniesManagement } from "@/components/companies-management";
+import { CompaniesManagement } from "@/components/companies/companies-management";
 import { Empresa, empresasFake } from "@/lib/data";
 import { NextPage } from "next";
 import { useState } from "react";

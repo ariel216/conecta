@@ -34,15 +34,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Search,
-  Download,
-  X,
-  Check,
-  MapPin,
-  Plus,
-  Building2,
-} from "lucide-react";
+import { Search, Download, X, Check, Plus, Building2 } from "lucide-react";
 import {
   asistenciasFake,
   eventosFake,
@@ -54,11 +46,20 @@ import {
 } from "@/lib/data";
 import { toast } from "sonner";
 
-export function AttendanceManagement({ eventId }: { eventId: number }) {
+interface AttendanceManagementProps {
+  eventId: number;
+  onConfirmedChange?: (confirmed: Asistencia[]) => void;
+}
+
+export function AttendanceManagement({
+  eventId,
+  onConfirmedChange,
+}: AttendanceManagementProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterEstado, setFilterEstado] = useState<string>("todos");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  //const [confirmed, setConfirmed] = useState<any[]>([]);
 
   const selectedEvent = eventosFake.find((e) => e.id === eventId);
   if (!selectedEvent)
@@ -89,11 +90,23 @@ export function AttendanceManagement({ eventId }: { eventId: number }) {
     );
   };
 
+  const handleConfirmarAsistencia = (asistencia: Asistencia) => {
+    actualizarEstadoAsistencia(asistencia.id, "confirmada");
+    setRefreshKey((prev) => prev + 1);
+    toast.success("Asistencia confirmada exitosamente");
+
+    const confirmadas = getAsistenciasConfirmadas();
+    onConfirmedChange?.(confirmadas);
+  };
+
   const handleCancelarAsistencia = (asistencia: Asistencia) => {
     if (puedeCancelarAsistencia(selectedEvent)) {
       actualizarEstadoAsistencia(asistencia.id, "cancelada");
       setRefreshKey((prev) => prev + 1);
       toast.success("Registro exitoso");
+
+      const confirmadas = getAsistenciasConfirmadas();
+      onConfirmedChange?.(confirmadas);
     } else {
       toast.error(
         "No se puede cancelar la asistencia. El evento es muy próximo"
@@ -101,10 +114,10 @@ export function AttendanceManagement({ eventId }: { eventId: number }) {
     }
   };
 
-  const handleConfirmarAsistencia = (asistencia: Asistencia) => {
-    actualizarEstadoAsistencia(asistencia.id, "confirmada");
-    setRefreshKey((prev) => prev + 1);
-    toast.success("Asistencia confirmada exitosamente");
+  const getAsistenciasConfirmadas = () => {
+    return asistenciasFake.filter(
+      (a) => a.id_evento === eventId && a.estado === "confirmada"
+    );
   };
 
   const exportToCSV = () => {
@@ -196,27 +209,9 @@ export function AttendanceManagement({ eventId }: { eventId: number }) {
   };
 
   return (
-    <div className="space-y-6" key={refreshKey}>
-      {/* encabezado */}
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <div>
-            <h2 className="text-2xl font-bold">
-              Asistencias - {selectedEvent.descripcion_evento}
-            </h2>
-            <div className="flex flex-row gap-2">
-              <MapPin className="h-5 w-5 text-blue-600 dark:text-blue-300 mt-1" />
-              <p className="text-gray-600 dark:text-gray-400 mt-1">
-                {selectedEvent.lugar} •{" "}
-                {new Date(selectedEvent.fecha_evento).toLocaleDateString(
-                  "es-CO"
-                )}
-              </p>
-            </div>
-          </div>
-        </div>
+    <div className="mt-2" key={refreshKey}>
+      <div className="flex justify-between items-center ml-1 mb-2">
         <div className="flex items-center gap-2">
-          {/* modal agregar asistencia */}
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
               <Button className="flex items-center gap-2 cursor-pointer">
@@ -234,7 +229,6 @@ export function AttendanceManagement({ eventId }: { eventId: number }) {
               </DialogHeader>
 
               <div className="space-y-4">
-                {/* buscador */}
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <Input
@@ -248,7 +242,6 @@ export function AttendanceManagement({ eventId }: { eventId: number }) {
                   />
                 </div>
 
-                {/* tabla empresas */}
                 <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
@@ -271,24 +264,43 @@ export function AttendanceManagement({ eventId }: { eventId: number }) {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {paginatedEmpresas.map((empresa) => (
-                        <TableRow key={empresa.id}>
-                          <TableCell>
-                            <input
-                              type="checkbox"
-                              checked={selectedEmpresas.includes(empresa.id)}
-                              onChange={() =>
-                                toggleEmpresaSeleccionada(empresa.id)
+                      {paginatedEmpresas.map((empresa) => {
+                        const isSelected = selectedEmpresas.includes(
+                          empresa.id
+                        );
+
+                        return (
+                          <TableRow
+                            key={empresa.id}
+                            className={`cursor-pointer ${
+                              isSelected ? "bg-muted" : ""
+                            }`}
+                            onClick={(e) => {
+                              if (
+                                (e.target as HTMLElement).tagName !== "INPUT"
+                              ) {
+                                toggleEmpresaSeleccionada(empresa.id);
                               }
-                            />
-                          </TableCell>
-                          <TableCell className="font-medium">
-                            {empresa.nombre}
-                          </TableCell>
-                          <TableCell>{empresa.rubro}</TableCell>
-                          <TableCell>{empresa.tipo}</TableCell>
-                        </TableRow>
-                      ))}
+                            }}
+                          >
+                            <TableCell>
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={() =>
+                                  toggleEmpresaSeleccionada(empresa.id)
+                                }
+                              />
+                            </TableCell>
+                            <TableCell className="font-medium">
+                              {empresa.nombre}
+                            </TableCell>
+                            <TableCell>{empresa.rubro}</TableCell>
+                            <TableCell>{empresa.tipo}</TableCell>
+                          </TableRow>
+                        );
+                      })}
+
                       {paginatedEmpresas.length === 0 && (
                         <TableRow>
                           <TableCell
@@ -355,13 +367,12 @@ export function AttendanceManagement({ eventId }: { eventId: number }) {
         </div>
       </div>
 
-      {/* filtros */}
+      {/* tabla asistencias */}
       <Card>
         <CardHeader>
-          <CardTitle>Filtros y Búsqueda</CardTitle>
-          <CardDescription>
-            Filtra las asistencias por estado o busca por empresa
-          </CardDescription>
+          <CardTitle>
+            Lista de Asistencias ({filteredAsistencias.length})
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col md:flex-row gap-4">
@@ -388,22 +399,10 @@ export function AttendanceManagement({ eventId }: { eventId: number }) {
               </SelectContent>
             </Select>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* tabla asistencias */}
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            Lista de Asistencias ({filteredAsistencias.length})
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto mt-2">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>ID</TableHead>
                   <TableHead>Empresa</TableHead>
                   <TableHead>Estado</TableHead>
                   <TableHead>Fecha Registro</TableHead>
@@ -415,9 +414,6 @@ export function AttendanceManagement({ eventId }: { eventId: number }) {
                   const puedeCancelar = puedeCancelarAsistencia(selectedEvent);
                   return (
                     <TableRow key={asistencia.id}>
-                      <TableCell className="font-medium">
-                        #{asistencia.id}
-                      </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <Building2 className="h-4 w-4 text-gray-600" />

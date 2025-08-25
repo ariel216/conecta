@@ -32,7 +32,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { EventForm } from "@/components/event-form";
+import { EventForm } from "@/components/events/event-form";
 import { contactosFake, departamentos, type Evento } from "@/lib/data";
 import {
   Search,
