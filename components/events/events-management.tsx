@@ -181,7 +181,6 @@ export function EventsManagement({
           evento.fecha_evento,
           evento.hora_inicio,
           evento.hora_fin,
-          evento.moneda,
           evento.id_contacto,
         ].join(",")
       ),
@@ -240,7 +239,6 @@ export function EventsManagement({
               </div>
 
               <div className="flex items-center justify-between pt-2">
-                <Badge variant="outline">{evento.moneda}</Badge>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm">
