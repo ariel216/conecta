@@ -14,20 +14,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  agregarProducto,
-  empresasFake,
-  unidadesMedida,
-  type Producto,
-} from "@/lib/data";
-import { Package, Building2 } from "lucide-react";
+import { agregarProducto, unidadesMedida, type Producto } from "@/lib/data";
+import { Package } from "lucide-react";
 import { toast } from "sonner";
 
 interface ProductFormProps {
   onProductAdded?: (producto: Producto) => void;
 }
 
-export function ProductForm({ onProductAdded }: ProductFormProps) {
+export function ProductDialog({ onProductAdded }: ProductFormProps) {
   const [formData, setFormData] = useState({
     nombre: "",
     cantidad: "",
@@ -43,8 +38,7 @@ export function ProductForm({ onProductAdded }: ProductFormProps) {
       !formData.nombre ||
       !formData.cantidad ||
       !formData.unidad_medida ||
-      !formData.tiempo_entrega ||
-      !formData.id_empresa
+      !formData.tiempo_entrega
     ) {
       toast.error("Por favor complete todos los campos");
       return;
@@ -97,30 +91,6 @@ export function ProductForm({ onProductAdded }: ProductFormProps) {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="empresa">Empresa *</Label>
-              <Select
-                value={formData.id_empresa}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, id_empresa: value })
-                }
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccionar empresa" />
-                </SelectTrigger>
-                <SelectContent>
-                  {empresasFake.map((empresa) => (
-                    <SelectItem key={empresa.id} value={empresa.id.toString()}>
-                      <div className="flex items-center gap-2">
-                        <Building2 className="h-4 w-4" />
-                        {empresa.codigo} - {empresa.nombre}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
               <Label htmlFor="nombre">Nombre del Producto *</Label>
               <Input
                 id="nombre"
@@ -167,7 +137,7 @@ export function ProductForm({ onProductAdded }: ProductFormProps) {
               </Select>
             </div>
 
-            <div className="space-y-2 md:col-span-2">
+            <div className="space-y-2 ">
               <Label htmlFor="tiempo_entrega">Tiempo de Entrega (días) *</Label>
               <Input
                 id="tiempo_entrega"

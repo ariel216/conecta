@@ -49,7 +49,10 @@ import {
   Globe,
   Facebook,
   Plus,
+  Package,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { encodeId } from "@/lib/hash";
 
 interface CompaniesManagementProps {
   empresas: Empresa[];
@@ -93,6 +96,12 @@ export function CompaniesManagement({
   const handleCompanyCreated = (empresa: Empresa) => {
     onCompanyCreated?.(empresa);
     setShowCreateForm(false);
+  };
+
+  const router = useRouter();
+
+  const handleProductsRoute = (id: number) => {
+    router.push(`/companies/${encodeId(id)}`);
   };
 
   const exportToCSV = () => {
@@ -438,6 +447,12 @@ export function CompaniesManagement({
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => handleProductsRoute(empresa.id)}
+                              >
+                                <Package className="h-4 w-4 mr-2" />
+                                Productos
+                              </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() =>
                                   console.log("Ver empresa", empresa.id)

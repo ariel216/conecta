@@ -25,12 +25,14 @@ const Page: NextPage<Props> = ({}) => {
     }
   };
   return (
-    <CompaniesManagement
-      empresas={empresas}
-      onEditCompany={handleEditCompany}
-      onDeleteCompany={handleDeleteCompany}
-      onCompanyCreated={handleCompanyCreated}
-    />
+    <>
+      <CompaniesManagement
+        empresas={empresas}
+        onEditCompany={handleEditCompany}
+        onDeleteCompany={handleDeleteCompany}
+        onCompanyCreated={handleCompanyCreated}
+      />
+    </>
   );
 };
 
