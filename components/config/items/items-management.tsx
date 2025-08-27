@@ -45,6 +45,7 @@ import {
   LayoutList,
 } from "lucide-react";
 import { ItemDialog } from "./items-dialog";
+import { toast } from "sonner";
 
 // --- Tipado ---
 type Item = {
@@ -344,14 +345,17 @@ export function ItemsManagement() {
             onCreate={(e) => {
               setData([...data, e]);
               setModalMode(null);
+              toast.success(`Rubro registrado exitosamente`);
             }}
             onEdit={(e) => {
               setData(data.map((x) => (x.id === e.id ? e : x)));
+              toast.success(`Rubro editado exitosamente`);
               setModalMode(null);
             }}
             onDelete={(id) => {
               setData(data.filter((x) => x.id !== id));
               setModalMode(null);
+              toast.success(`Rubro eliminado exitosamente`);
             }}
           />
 

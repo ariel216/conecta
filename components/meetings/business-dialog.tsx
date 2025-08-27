@@ -14,6 +14,7 @@ import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+import { Handshake, Search } from "lucide-react";
 
 export default function BusinessDialog() {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -93,13 +94,18 @@ export default function BusinessDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          Ver detalle
+        <Button className="cursor-pointer" variant="secondary" size="sm">
+          <Search className="w-4 h-4" />
+          Detalle
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-xl md:max-w-3xl lg:max-w-5xl w-full">
         <DialogHeader>
-          <DialogTitle>Intensiones de Negocio</DialogTitle>
+          <DialogTitle>
+            <div className="flex gap-2">
+              <Handshake className="w-6 h-6" /> Intensiones de Negocio
+            </div>
+          </DialogTitle>
           <DialogDescription>Detalles de la reunión</DialogDescription>
         </DialogHeader>
 
@@ -128,7 +134,7 @@ export default function BusinessDialog() {
               onSubmit={(e) => handleCreateNegotiated(e, 1)}
               className="space-y-4"
             >
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="descripcion">Descripción *</Label>
                 <Input
                   id="descripcion"
@@ -143,7 +149,7 @@ export default function BusinessDialog() {
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="cantidad">Cantidad *</Label>
                   <Input
                     id="cantidad"
@@ -159,7 +165,7 @@ export default function BusinessDialog() {
                     placeholder="1"
                   />
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="precio">Precio Unitario *</Label>
                   <Input
                     id="precio"
@@ -178,7 +184,7 @@ export default function BusinessDialog() {
                 </div>
               </div>
               <div className="flex justify-end gap-2">
-                <Button type="submit">Registrar Negociado</Button>
+                <Button type="submit">Registrar</Button>
               </div>
             </form>
           </div>

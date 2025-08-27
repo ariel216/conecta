@@ -53,6 +53,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PersonaDialog } from "./persons-dialog";
+import { toast } from "sonner";
 
 type Persona = {
   id: number;
@@ -396,14 +397,17 @@ export function PersonsManagement() {
             onCreate={(p) => {
               setData([...data, p]);
               setModalMode(null);
+              toast.success(`Persona registrada exitosamente`);
             }}
             onEdit={(p) => {
               setData(data.map((x) => (x.id === p.id ? p : x)));
               setModalMode(null);
+              toast.success(`Persona editada exitosamente`);
             }}
             onDelete={(id) => {
               setData(data.filter((x) => x.id !== id));
               setModalMode(null);
+              toast.success(`Persona eliminada exitosamente`);
             }}
           />
 

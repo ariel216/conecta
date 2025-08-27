@@ -16,6 +16,7 @@ import {
   type Evento,
   type Empresa,
 } from "@/lib/data";
+import { encodeId } from "@/lib/hash";
 import {
   CalendarDays,
   Building2,
@@ -27,6 +28,7 @@ import {
   Handshake,
   DollarSign,
 } from "lucide-react";
+import Link from "next/link";
 
 interface AdminDashboardProps {
   eventos: Evento[];
@@ -121,63 +123,75 @@ export function AdminDashboard({ eventos, empresas }: AdminDashboardProps) {
     <div className="space-y-2">
       {/* Tarjetas de estadísticas */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Eventos</CardTitle>
-            <CalendarDays className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalEventos}</div>
-            <p className="text-xs text-muted-foreground">Eventos registrados</p>
-          </CardContent>
-        </Card>
+        <Link href={`/events`}>
+          <Card className="hover:shadow-md dark:hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+              <CardTitle className="text-sm font-medium">
+                Total Eventos
+              </CardTitle>
+              <CalendarDays className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold">{totalEventos}</div>
+              <p className="text-xs text-muted-foreground">
+                Eventos registrados
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Empresas
-            </CardTitle>
-            <Building2 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalEmpresas}</div>
-            <p className="text-xs text-muted-foreground">
-              Empresas registradas
-            </p>
-          </CardContent>
-        </Card>
+        <Link href={`/companies`}>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+              <CardTitle className="text-sm font-medium">
+                Total Empresas
+              </CardTitle>
+              <Building2 className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold">{totalEmpresas}</div>
+              <p className="text-xs text-muted-foreground">
+                Empresas registradas
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Próximos Eventos
-            </CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600 dark:text-green-300">
-              {eventosProximos}
-            </div>
-            <p className="text-xs text-muted-foreground">Por realizarse</p>
-          </CardContent>
-        </Card>
+        <Link href={`/meetings`}>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+              <CardTitle className="text-sm font-medium">
+                Próximos Eventos
+              </CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600 dark:text-green-300">
+                {eventosProximos}
+              </div>
+              <p className="text-xs text-muted-foreground">Por realizarse</p>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Asistencias
-            </CardTitle>
-            <UserCheck className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
-              {totalAsistencias}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Asistencias registradas
-            </p>
-          </CardContent>
-        </Card>
+        <Link href={`/meetings`}>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+              <CardTitle className="text-sm font-medium">
+                Total Asistencias
+              </CardTitle>
+              <UserCheck className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
+                {totalAsistencias}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Asistencias registradas
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
       {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -448,14 +462,17 @@ export function AdminDashboard({ eventos, empresas }: AdminDashboardProps) {
         </CardHeader>
         <CardContent>
           {proximosEventos.length > 0 ? (
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {proximosEventos.map((evento) => (
-                <div
+                <Link
                   key={evento.id}
-                  className="flex items-center justify-between p-4 border rounded-lg"
+                  href={`/meetings/${encodeId(evento.id)}`}
+                  className="block hover:shadow-md transition-shadow rounded-lg border p-4 group"
                 >
                   <div className="space-y-1">
-                    <h4 className="font-medium">{evento.descripcion_evento}</h4>
+                    <h4 className="font-medium group-hover:text-primary transition-colors">
+                      {evento.descripcion_evento}
+                    </h4>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <Building2 className="h-3 w-3" />
@@ -467,7 +484,7 @@ export function AdminDashboard({ eventos, empresas }: AdminDashboardProps) {
                       </span>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right mt-2">
                     <div className="font-medium">
                       {new Date(evento.fecha_evento).toLocaleDateString(
                         "es-BO"
@@ -477,7 +494,7 @@ export function AdminDashboard({ eventos, empresas }: AdminDashboardProps) {
                       {evento.hora_inicio} - {evento.hora_fin}
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           ) : (
@@ -496,7 +513,7 @@ export function AdminDashboard({ eventos, empresas }: AdminDashboardProps) {
             Contactos Disponibles
           </CardTitle>
           <CardDescription>
-            Personal asignado para la gestión de eventos
+            Personal asignado como contacto para eventos
           </CardDescription>
         </CardHeader>
         <CardContent>

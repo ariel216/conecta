@@ -133,11 +133,6 @@ export function EventsManagement({
     setShowCreateForm(false);
   };
 
-  const getContactoNombre = (idContacto: number) => {
-    const contacto = contactosFake.find((c) => c.id === idContacto);
-    return contacto ? contacto.nombre : "No asignado";
-  };
-
   const getEventoEstado = (fechaEvento: string) => {
     const fecha = new Date(fechaEvento);
     const hoy = new Date();

@@ -47,7 +47,7 @@ export default function AttendancePage() {
 
               return (
                 <Link key={evento.id} href={`/meetings/${encodeId(evento.id)}`}>
-                  <Card className="cursor-pointer hover:shadow-md transition-shadow">
+                  <Card className="hover:shadow-md transition-shadow">
                     <CardContent className="p-4">
                       <div className="flex items-start gap-3">
                         <Calendar className="h-5 w-5 text-blue-600 dark:text-blue-300 mt-1" />
@@ -65,10 +65,10 @@ export default function AttendancePage() {
                               )}
                             </span>
                             <div className="flex gap-2">
-                              <span className="px-2 py-0.5 rounded-full font-medium bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-200">
+                              <span className="px-2 py-0.5 rounded-full font-medium text-[0.8rem] bg-indigo-100 text-indigo-700 dark:bg-indigo-100 dark:text-indigo-800">
                                 {asistenciasCount} asistencias
                               </span>
-                              <span className="px-2 py-0.5 rounded-full font-medium bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200">
+                              <span className="px-2 py-0.5 rounded-full font-medium text-[0.8rem] bg-green-100 text-green-700 dark:bg-green-100 dark:text-green-800">
                                 {confirmadas} confirmadas
                               </span>
                             </div>

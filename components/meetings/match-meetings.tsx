@@ -257,7 +257,7 @@ function ReunionCard({
   return (
     <div className="flex flex-col md:flex-row items-center justify-between p-4 border rounded-lg shadow-sm hover:shadow-md transition">
       {/* Horario y mesa */}
-      <div className="flex flex-col gap-1 text-sm text-gray-600 dark:text-gray-200 mb-3">
+      <div className="flex flex-col items-center gap-1 text-sm text-gray-600 dark:text-gray-200 mb-3">
         <span
           className={`px-2 py-0.5 rounded-md font-semibold ${getMesaColor(
             item.mesa
@@ -267,6 +267,9 @@ function ReunionCard({
         </span>
         <span className="font-medium">
           {item.start} - {item.end}
+        </span>
+        <span>
+          <BusinessDialog />
         </span>
       </div>
 
@@ -299,9 +302,6 @@ function ReunionCard({
             {item.empresa2.nombre}
           </span>
         </div>
-      </div>
-      <div className="block">
-        <BusinessDialog />
       </div>
     </div>
   );

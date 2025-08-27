@@ -45,6 +45,7 @@ import {
   List,
 } from "lucide-react";
 import { EntidadDialog } from "./entities-dialog";
+import { toast } from "sonner";
 
 // --- Tipado ---
 type Entidad = {
@@ -375,14 +376,17 @@ export function EntitiesManagement() {
             onCreate={(e) => {
               setData([...data, e]);
               setModalMode(null);
+              toast.success(`Entidad registrada exitosamente`);
             }}
             onEdit={(e) => {
               setData(data.map((x) => (x.id === e.id ? e : x)));
               setModalMode(null);
+              toast.success(`Entidad editada exitosamente`);
             }}
             onDelete={(id) => {
               setData(data.filter((x) => x.id !== id));
               setModalMode(null);
+              toast.success(`Entidad eliminada exitosamente`);
             }}
           />
 

@@ -24,7 +24,6 @@ import {
 import {
   contactosFake,
   departamentos,
-  monedas,
   agregarEvento,
   type Evento,
 } from "@/lib/data";
@@ -34,7 +33,6 @@ import {
   MapPin,
   Building2,
   Globe,
-  DollarSign,
   Users,
   Timer,
   Coffee,

@@ -54,6 +54,7 @@ export function CompanyForm({ onCompanyCreated }: CompanyFormProps) {
     representante: "",
     celular: "",
     correo: "",
+    url_logo: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -91,6 +92,7 @@ export function CompanyForm({ onCompanyCreated }: CompanyFormProps) {
         representante: "",
         celular: "",
         correo: "",
+        url_logo: "",
       });
       toast.success(
         `Empresa registrada exitosamente con código: ${nuevaEmpresa.codigo}`
