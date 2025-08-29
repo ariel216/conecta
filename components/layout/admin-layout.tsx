@@ -17,6 +17,7 @@ import {
 import { ThemeToggle } from "../theme/theme-toogle";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { LogoutButton } from "../commons/LogoutButton";
 
 interface AdminLayoutProps {
   children?: React.ReactNode;
@@ -100,6 +101,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
               <Badge className="bg-green-100 text-green-600 dark:text-green-700">
                 Administrador
               </Badge>
+              <LogoutButton />
 
               {/* Menú móvil */}
               <div className="md:hidden">
